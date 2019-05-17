@@ -1,16 +1,14 @@
 //
 //  Spot.swift
-//  Snacktacular
-//
-//  Created by David Kim on 5/15/19.
-//  Copyright © 2019 John Gallaugher. All rights reserved.
-//
+
 
 import Foundation
 import CoreLocation
 import Firebase
+import MapKit
 
-class Spot{
+
+class Spot: NSObject, MKAnnotation{
     var name: String
     var address: String
     var coordinate: CLLocationCoordinate2D
@@ -19,7 +17,7 @@ class Spot{
     var postingUserID: String
     var documentID: String
     
-    /*for firebase-database*/
+    //for firebase-database
     var longitude: CLLocationDegrees{
         return coordinate.longitude
     }
@@ -29,7 +27,14 @@ class Spot{
     var dictionary: [String: Any]{
         return ["name": name, "address": address, "longitude": longitude, "latitude": latitude, "averageRating": averageRating, "numberOfReviews": numberOfReviews, "postingUserID": postingUserID]
     }
-    /*****end*****/
+    
+    //for MKAnnotation
+    var title: String? {
+        return name
+    }
+    var subtitle: String?{
+        return address
+    }
     
     init(name: String, address: String, coordinate: CLLocationCoordinate2D, averageRating: Double, numberOfReviews: Int,
          postingUserID: String, documentID: String){
@@ -43,7 +48,7 @@ class Spot{
     }
    
     //see SpotDetailViewController for usage. 
-    convenience init(){
+    convenience override init(){
         self.init(name: "", address: "", coordinate: CLLocationCoordinate2D(), averageRating: 0.0, numberOfReviews: 0, postingUserID: "", documentID: "")
     }
     

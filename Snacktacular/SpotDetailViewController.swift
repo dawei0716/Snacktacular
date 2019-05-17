@@ -1,13 +1,10 @@
 //
 //  SpotDetailViewController.swift
-//  Snacktacular
-//
-//  Created by John Gallaugher on 3/23/18.
-//  Copyright © 2018 John Gallaugher. All rights reserved.
-//
+
 
 import UIKit
 import GooglePlaces
+import MapKit
 
 class SpotDetailViewController: UIViewController {
     
@@ -17,20 +14,35 @@ class SpotDetailViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
 
+    @IBOutlet weak var mapView: MKMapView!
+    
     var spot: Spot!
+    let regionDistance: CLLocationDistance = 750 //750 meters
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //mapView.delegate = self //for mapView
+        
+        
         if spot == nil { //clicked add button
             spot = Spot() //convenience initializer
         }
-        nameField.text = spot.name
-        addressField.text = spot.address
+        //setting region
+        let region = MKCoordinateRegion(center: spot.coordinate,latitudinalMeters: regionDistance, longitudinalMeters: regionDistance)
+        mapView.setRegion(region, animated: true)
+        updateUserInterface()
     }
 
     func updateUserInterface(){
         nameField.text = spot.name
         addressField.text = spot.address
+        updateMap()
+    }
+    
+    func updateMap(){
+        mapView.removeAnnotations(mapView.annotations)
+        mapView.addAnnotation(spot)
+        mapView.setCenter(spot.coordinate, animated: true)
     }
     
     func leaveViewController(){
